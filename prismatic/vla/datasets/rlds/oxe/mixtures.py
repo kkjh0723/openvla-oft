@@ -213,6 +213,58 @@ OXE_NAMED_MIXTURES: Dict[str, List[Tuple[str, float]]] = {
         ("libero_10_no_noops", 1.0),
     ],
 
+    # === LIBERO-dynamic suites ===
+    "dynamic_pick_slow_no_noops": [("dynamic_pick_slow_no_noops", 1.0)],
+    "dynamic_pick_fast_no_noops": [("dynamic_pick_fast_no_noops", 1.0)],
+    "dynamic_place_slow_no_noops": [("dynamic_place_slow_no_noops", 1.0)],
+    "dynamic_place_fast_no_noops": [("dynamic_place_fast_no_noops", 1.0)],
+    "dynamic_place_precise_no_noops": [("dynamic_place_precise_no_noops", 1.0)],
+
+    # === LIBERO-dynamic v8.1 suites (5-speed pick/place + sequential families) ===
+    "dynamic_pick_v005_no_noops": [("dynamic_pick_v005_no_noops", 1.0)],
+    "dynamic_pick_v010_no_noops": [("dynamic_pick_v010_no_noops", 1.0)],
+    "dynamic_pick_v015_no_noops": [("dynamic_pick_v015_no_noops", 1.0)],
+    "dynamic_pick_v020_no_noops": [("dynamic_pick_v020_no_noops", 1.0)],
+    "dynamic_pick_v025_no_noops": [("dynamic_pick_v025_no_noops", 1.0)],
+    "dynamic_place_v005_no_noops": [("dynamic_place_v005_no_noops", 1.0)],
+    "dynamic_place_v010_no_noops": [("dynamic_place_v010_no_noops", 1.0)],
+    "dynamic_place_v015_no_noops": [("dynamic_place_v015_no_noops", 1.0)],
+    "dynamic_place_v020_no_noops": [("dynamic_place_v020_no_noops", 1.0)],
+    "dynamic_place_v025_no_noops": [("dynamic_place_v025_no_noops", 1.0)],
+    "dynamic_pick_seq_no_noops": [("dynamic_pick_seq_no_noops", 1.0)],
+    "dynamic_place_seq_no_noops": [("dynamic_place_seq_no_noops", 1.0)],
+
+    # All-task v8.1 mixture: train on all 12 suites at once (equal weight).
+    "dynamic_all_v8_no_noops": [
+        ("dynamic_pick_v005_no_noops", 1.0),
+        ("dynamic_pick_v010_no_noops", 1.0),
+        ("dynamic_pick_v015_no_noops", 1.0),
+        ("dynamic_pick_v020_no_noops", 1.0),
+        ("dynamic_pick_v025_no_noops", 1.0),
+        ("dynamic_place_v005_no_noops", 1.0),
+        ("dynamic_place_v010_no_noops", 1.0),
+        ("dynamic_place_v015_no_noops", 1.0),
+        ("dynamic_place_v020_no_noops", 1.0),
+        ("dynamic_place_v025_no_noops", 1.0),
+        ("dynamic_pick_seq_no_noops", 1.0),
+        ("dynamic_place_seq_no_noops", 1.0),
+    ],
+
+    "dynamic_all_v8_deltaI_no_noops": [
+        ("dynamic_pick_v005_deltaI_no_noops", 1.0),
+        ("dynamic_pick_v010_deltaI_no_noops", 1.0),
+        ("dynamic_pick_v015_deltaI_no_noops", 1.0),
+        ("dynamic_pick_v020_deltaI_no_noops", 1.0),
+        ("dynamic_pick_v025_deltaI_no_noops", 1.0),
+        ("dynamic_place_v005_deltaI_no_noops", 1.0),
+        ("dynamic_place_v010_deltaI_no_noops", 1.0),
+        ("dynamic_place_v015_deltaI_no_noops", 1.0),
+        ("dynamic_place_v020_deltaI_no_noops", 1.0),
+        ("dynamic_place_v025_deltaI_no_noops", 1.0),
+        ("dynamic_pick_seq_deltaI_no_noops", 1.0),
+        ("dynamic_place_seq_deltaI_no_noops", 1.0),
+    ],
+
     # === ALOHA Fine-Tuning Datasets ===
     "aloha1_fold_shorts_20_demos": [
         ("aloha1_fold_shorts_20_demos", 1.0),

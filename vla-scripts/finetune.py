@@ -83,6 +83,8 @@ class FinetuneConfig:
     use_film: bool = False                           # If True, uses FiLM to infuse language inputs into visual features
     num_images_in_input: int = 1                     # Number of images in the VLA input (default: 1)
     use_proprio: bool = False                        # If True, includes robot proprioceptive state in input
+    use_temporal_image: bool = False                 # If True, adds the t-2 primary frame (obs window=3) as an extra image (2-frame / GR00T d2 delta [-2,0])
+    use_delta_image: bool = False                    # If True, adds the materialized ΔI base channel (image_delta_primary, current step) as the extra image INSTEAD of the raw t-2 frame (OFT-ΔI). Needs a *_deltaI_no_noops dataset. Mutually exclusive with use_temporal_image; window_size stays 1 (ΔI is per-step).
 
     # Training configuration
     batch_size: int = 8                              # Batch size per device (total batch size = batch_size * num GPUs)
@@ -963,8 +965,25 @@ def finetune(cfg: FinetuneConfig) -> None:
     # )
     # ---
 
-    # We assume that the model takes as input one third-person camera image and 1 or 2 optional wrist camera image(s)
+    # Image layout for `num_images_in_input`:
+    #   1 -> [primary_t]
+    #   2 -> [primary_t, wrist_t]
+    #   3 (use_temporal_image) -> [primary_t, wrist_t, primary_{t-2}]
+    #   3 (use_delta_image)    -> [primary_t, wrist_t, ΔI_t]   (OFT-ΔI)
+    # The raw-t-2 temporal frame requires an obs history window of size 3 (oldest
+    # frame = t-2, GR00T d2 delta [-2, 0]). The ΔI channel is materialized per
+    # step, so it needs NO window (window_size stays 1).
+    assert not (cfg.use_temporal_image and cfg.use_delta_image), (
+        "use_temporal_image and use_delta_image are mutually exclusive (ΔI "
+        "REPLACES the raw t-2 frame)."
+    )
     use_wrist_image = cfg.num_images_in_input > 1
+    window_size = 3 if cfg.use_temporal_image else 1
+    if cfg.use_temporal_image or cfg.use_delta_image:
+        assert cfg.num_images_in_input == 3, (
+            "use_temporal_image/use_delta_image expect num_images_in_input=3 "
+            "([primary_t, wrist_t, {primary_{t-2} | ΔI_t}])."
+        )
 
     # Create training and optional validation datasets
     batch_transform = RLDSBatchTransform(
@@ -974,6 +993,8 @@ def finetune(cfg: FinetuneConfig) -> None:
         prompt_builder_fn=PurePromptBuilder,
         use_wrist_image=use_wrist_image,
         use_proprio=cfg.use_proprio,
+        use_temporal_image=cfg.use_temporal_image,
+        use_delta_image=cfg.use_delta_image,
     )
     train_dataset = RLDSDataset(
         cfg.data_root_dir,
@@ -982,6 +1003,7 @@ def finetune(cfg: FinetuneConfig) -> None:
         resize_resolution=tuple(vla.module.config.image_sizes),
         shuffle_buffer_size=cfg.shuffle_buffer_size,
         image_aug=cfg.image_aug,
+        window_size=window_size,
     )
     if cfg.use_val_set:
         val_dataset = RLDSDataset(
@@ -992,6 +1014,7 @@ def finetune(cfg: FinetuneConfig) -> None:
             shuffle_buffer_size=cfg.shuffle_buffer_size // 10,
             image_aug=cfg.image_aug,
             train=False,
+            window_size=window_size,
         )
 
     # [Important] Save dataset statistics so that we can unnormalize actions during inference

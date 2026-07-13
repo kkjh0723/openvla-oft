@@ -129,6 +129,14 @@ class PaddedCollatorForActionPrediction:
                 pixel_values = torch.cat((torch.stack(pixel_values), torch.stack(pixel_values_wrist)), dim=1)
             else:
                 pixel_values = torch.stack(pixel_values)
+            # Temporal (t-2) primary frame, if present, is concatenated LAST so the
+            # per-example channel order is [primary_t, wrist_t, primary_{t-2}].
+            # This must match the eval server's image ordering (oft_server 2-frame).
+            if "pixel_values_temporal" in instances[0]:
+                pixel_values_temporal = torch.stack(
+                    [instance["pixel_values_temporal"] for instance in instances]
+                )
+                pixel_values = torch.cat((pixel_values, pixel_values_temporal), dim=1)
         else:
             raise ValueError(f"Unsupported `pixel_values` type = {type(pixel_values)}")
 

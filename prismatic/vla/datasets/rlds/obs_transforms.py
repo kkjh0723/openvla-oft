@@ -15,7 +15,17 @@ from absl import logging
 
 # ruff: noqa: B023
 def augment(obs: Dict, seed: tf.Tensor, augment_kwargs: Union[Dict, Dict[str, Dict]]) -> Dict:
-    """Augments images, skipping padding images."""
+    """Augments images, skipping padding images.
+
+    Seed handling: each image gets ``seed + offset`` where ``offset`` is keyed by
+    the image's BASE view name. A materialized ``delta_<view>`` (ΔI channel)
+    shares its base ``<view>``'s offset, so — because ``augment_image`` advances
+    the seed once per op with ``random_resized_crop`` FIRST — the delta view
+    receives the IDENTICAL crop as its raw counterpart (the ΔI motion map must
+    stay spatially aligned with the current frame). Pair this with a crop-only
+    ``augment_order=["random_resized_crop"]`` in the delta view's kwargs so no
+    photometric op perturbs the difference image's zero-motion anchor / magnitude.
+    """
     image_names = {key[6:] for key in obs if key.startswith("image_")}
 
     # "augment_order" is required in augment_kwargs, so if it's there, we can assume that the user has passed
@@ -24,17 +34,24 @@ def augment(obs: Dict, seed: tf.Tensor, augment_kwargs: Union[Dict, Dict[str, Di
     if "augment_order" in augment_kwargs:
         augment_kwargs = {name: augment_kwargs for name in image_names}
 
-    for i, name in enumerate(image_names):
+    # Per-BASE-view seed offset (sorted for determinism; image_names is a set).
+    # delta_<view> collapses to <view> so both draw the same crop seed.
+    def _base(n):
+        return n[len("delta_"):] if n.startswith("delta_") else n
+    base_offset = {bn: i for i, bn in enumerate(sorted({_base(n) for n in image_names}))}
+
+    for name in sorted(image_names):
         if name not in augment_kwargs:
             continue
         kwargs = augment_kwargs[name]
-        logging.debug(f"Augmenting image_{name} with kwargs {kwargs}")
+        offset = base_offset[_base(name)]
+        logging.debug(f"Augmenting image_{name} with kwargs {kwargs} (seed offset {offset})")
         obs[f"image_{name}"] = tf.cond(
             obs["pad_mask_dict"][f"image_{name}"],
             lambda: dl.transforms.augment_image(
                 obs[f"image_{name}"],
                 **kwargs,
-                seed=seed + i,  # augment each image differently
+                seed=seed + offset,  # delta_<view> shares <view>'s crop seed
             ),
             lambda: obs[f"image_{name}"],  # skip padding images
         )
