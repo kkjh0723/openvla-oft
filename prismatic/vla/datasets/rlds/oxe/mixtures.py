@@ -250,19 +250,19 @@ OXE_NAMED_MIXTURES: Dict[str, List[Tuple[str, float]]] = {
         ("dynamic_place_seq_no_noops", 1.0),
     ],
 
-    "dynamic_all_v8_deltaI_no_noops": [
-        ("dynamic_pick_v005_deltaI_no_noops", 1.0),
-        ("dynamic_pick_v010_deltaI_no_noops", 1.0),
-        ("dynamic_pick_v015_deltaI_no_noops", 1.0),
-        ("dynamic_pick_v020_deltaI_no_noops", 1.0),
-        ("dynamic_pick_v025_deltaI_no_noops", 1.0),
-        ("dynamic_place_v005_deltaI_no_noops", 1.0),
-        ("dynamic_place_v010_deltaI_no_noops", 1.0),
-        ("dynamic_place_v015_deltaI_no_noops", 1.0),
-        ("dynamic_place_v020_deltaI_no_noops", 1.0),
-        ("dynamic_place_v025_deltaI_no_noops", 1.0),
-        ("dynamic_pick_seq_deltaI_no_noops", 1.0),
-        ("dynamic_place_seq_deltaI_no_noops", 1.0),
+    "dynamic_all_v8_delta_i_no_noops": [
+        ("dynamic_pick_v005_delta_i_no_noops", 1.0),
+        ("dynamic_pick_v010_delta_i_no_noops", 1.0),
+        ("dynamic_pick_v015_delta_i_no_noops", 1.0),
+        ("dynamic_pick_v020_delta_i_no_noops", 1.0),
+        ("dynamic_pick_v025_delta_i_no_noops", 1.0),
+        ("dynamic_place_v005_delta_i_no_noops", 1.0),
+        ("dynamic_place_v010_delta_i_no_noops", 1.0),
+        ("dynamic_place_v015_delta_i_no_noops", 1.0),
+        ("dynamic_place_v020_delta_i_no_noops", 1.0),
+        ("dynamic_place_v025_delta_i_no_noops", 1.0),
+        ("dynamic_pick_seq_delta_i_no_noops", 1.0),
+        ("dynamic_place_seq_delta_i_no_noops", 1.0),
     ],
 
     # === ALOHA Fine-Tuning Datasets ===

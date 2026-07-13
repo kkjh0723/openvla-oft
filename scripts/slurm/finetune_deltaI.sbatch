@@ -16,18 +16,18 @@
 # Cross-architecture transfer of the GR00T ΔI TIR (Isaac-GR00T 6b780c2).
 #
 # Requires the ΔI dataset built by the converter's --delta mode:
-#   dynamic_all_v8_deltaI_no_noops  (12-suite mixture of *_deltaI_no_noops).
+#   dynamic_all_v8_delta_i_no_noops  (12-suite mixture of *_delta_i_no_noops).
 # Color-jitter is disabled on the ΔI view; its crop is shared with primary via
 # the base-view seed-sharing in obs_transforms.augment (geometry aligned).
 #
 # Usage:
 #   sbatch scripts/slurm/finetune_deltaI.sbatch
 #   # or explicit:
-#   SUITE=dynamic_all_v8 DATASET_NAME=dynamic_all_v8_deltaI_no_noops \
+#   SUITE=dynamic_all_v8 DATASET_NAME=dynamic_all_v8_delta_i_no_noops \
 #     sbatch scripts/slurm/finetune_deltaI.sbatch
 #
 # Differences vs finetune_2frame.sbatch:
-#   - DATASET_NAME defaults to ${SUITE}_deltaI_no_noops (the ΔI dataset)
+#   - DATASET_NAME defaults to ${SUITE}_delta_i_no_noops (the ΔI dataset)
 #   - --use_delta_image True (instead of --use_temporal_image); window stays 1
 #   - RUN_NAME defaults to openvla-oft-${SUITE}_deltaI (no checkpoint collision)
 # Everything else (16 GPU, BATCH_SIZE=2, global batch 32, LR, steps, LoRA r=32,
@@ -51,7 +51,7 @@ if [ -z "${DATA_ROOT:-}" ]; then
         *) echo "ERROR: cannot infer DATA_ROOT from SUITE=$SUITE"; exit 1 ;;
     esac
 fi
-DATASET_NAME="${DATASET_NAME:-${SUITE}_deltaI_no_noops}"
+DATASET_NAME="${DATASET_NAME:-${SUITE}_delta_i_no_noops}"
 # Distinct run name so the ΔI checkpoints never collide with the 2-frame run.
 RUN_NAME="${RUN_NAME:-openvla-oft-${SUITE}_deltaI}"
 CKPT_ROOT="${CKPT_ROOT:-/mnt/shared/jinhyung/checkpoints/libero-dynamic/OpenVLA-OFT}"

@@ -771,84 +771,84 @@ OXE_DATASET_CONFIGS = {
         "state_encoding": StateEncoding.POS_EULER,
         "action_encoding": ActionEncoding.EEF_POS,
     },
-    "dynamic_pick_v005_deltaI_no_noops": {
+    "dynamic_pick_v005_delta_i_no_noops": {
         "image_obs_keys": {"primary": "image", "secondary": None, "wrist": "wrist_image", "delta_primary": "delta_image"},
         "depth_obs_keys": {"primary": None, "secondary": None, "wrist": None},
         "state_obs_keys": ["EEF_state", "gripper_state"],
         "state_encoding": StateEncoding.POS_EULER,
         "action_encoding": ActionEncoding.EEF_POS,
     },
-    "dynamic_pick_v010_deltaI_no_noops": {
+    "dynamic_pick_v010_delta_i_no_noops": {
         "image_obs_keys": {"primary": "image", "secondary": None, "wrist": "wrist_image", "delta_primary": "delta_image"},
         "depth_obs_keys": {"primary": None, "secondary": None, "wrist": None},
         "state_obs_keys": ["EEF_state", "gripper_state"],
         "state_encoding": StateEncoding.POS_EULER,
         "action_encoding": ActionEncoding.EEF_POS,
     },
-    "dynamic_pick_v015_deltaI_no_noops": {
+    "dynamic_pick_v015_delta_i_no_noops": {
         "image_obs_keys": {"primary": "image", "secondary": None, "wrist": "wrist_image", "delta_primary": "delta_image"},
         "depth_obs_keys": {"primary": None, "secondary": None, "wrist": None},
         "state_obs_keys": ["EEF_state", "gripper_state"],
         "state_encoding": StateEncoding.POS_EULER,
         "action_encoding": ActionEncoding.EEF_POS,
     },
-    "dynamic_pick_v020_deltaI_no_noops": {
+    "dynamic_pick_v020_delta_i_no_noops": {
         "image_obs_keys": {"primary": "image", "secondary": None, "wrist": "wrist_image", "delta_primary": "delta_image"},
         "depth_obs_keys": {"primary": None, "secondary": None, "wrist": None},
         "state_obs_keys": ["EEF_state", "gripper_state"],
         "state_encoding": StateEncoding.POS_EULER,
         "action_encoding": ActionEncoding.EEF_POS,
     },
-    "dynamic_pick_v025_deltaI_no_noops": {
+    "dynamic_pick_v025_delta_i_no_noops": {
         "image_obs_keys": {"primary": "image", "secondary": None, "wrist": "wrist_image", "delta_primary": "delta_image"},
         "depth_obs_keys": {"primary": None, "secondary": None, "wrist": None},
         "state_obs_keys": ["EEF_state", "gripper_state"],
         "state_encoding": StateEncoding.POS_EULER,
         "action_encoding": ActionEncoding.EEF_POS,
     },
-    "dynamic_place_v005_deltaI_no_noops": {
+    "dynamic_place_v005_delta_i_no_noops": {
         "image_obs_keys": {"primary": "image", "secondary": None, "wrist": "wrist_image", "delta_primary": "delta_image"},
         "depth_obs_keys": {"primary": None, "secondary": None, "wrist": None},
         "state_obs_keys": ["EEF_state", "gripper_state"],
         "state_encoding": StateEncoding.POS_EULER,
         "action_encoding": ActionEncoding.EEF_POS,
     },
-    "dynamic_place_v010_deltaI_no_noops": {
+    "dynamic_place_v010_delta_i_no_noops": {
         "image_obs_keys": {"primary": "image", "secondary": None, "wrist": "wrist_image", "delta_primary": "delta_image"},
         "depth_obs_keys": {"primary": None, "secondary": None, "wrist": None},
         "state_obs_keys": ["EEF_state", "gripper_state"],
         "state_encoding": StateEncoding.POS_EULER,
         "action_encoding": ActionEncoding.EEF_POS,
     },
-    "dynamic_place_v015_deltaI_no_noops": {
+    "dynamic_place_v015_delta_i_no_noops": {
         "image_obs_keys": {"primary": "image", "secondary": None, "wrist": "wrist_image", "delta_primary": "delta_image"},
         "depth_obs_keys": {"primary": None, "secondary": None, "wrist": None},
         "state_obs_keys": ["EEF_state", "gripper_state"],
         "state_encoding": StateEncoding.POS_EULER,
         "action_encoding": ActionEncoding.EEF_POS,
     },
-    "dynamic_place_v020_deltaI_no_noops": {
+    "dynamic_place_v020_delta_i_no_noops": {
         "image_obs_keys": {"primary": "image", "secondary": None, "wrist": "wrist_image", "delta_primary": "delta_image"},
         "depth_obs_keys": {"primary": None, "secondary": None, "wrist": None},
         "state_obs_keys": ["EEF_state", "gripper_state"],
         "state_encoding": StateEncoding.POS_EULER,
         "action_encoding": ActionEncoding.EEF_POS,
     },
-    "dynamic_place_v025_deltaI_no_noops": {
+    "dynamic_place_v025_delta_i_no_noops": {
         "image_obs_keys": {"primary": "image", "secondary": None, "wrist": "wrist_image", "delta_primary": "delta_image"},
         "depth_obs_keys": {"primary": None, "secondary": None, "wrist": None},
         "state_obs_keys": ["EEF_state", "gripper_state"],
         "state_encoding": StateEncoding.POS_EULER,
         "action_encoding": ActionEncoding.EEF_POS,
     },
-    "dynamic_pick_seq_deltaI_no_noops": {
+    "dynamic_pick_seq_delta_i_no_noops": {
         "image_obs_keys": {"primary": "image", "secondary": None, "wrist": "wrist_image", "delta_primary": "delta_image"},
         "depth_obs_keys": {"primary": None, "secondary": None, "wrist": None},
         "state_obs_keys": ["EEF_state", "gripper_state"],
         "state_encoding": StateEncoding.POS_EULER,
         "action_encoding": ActionEncoding.EEF_POS,
     },
-    "dynamic_place_seq_deltaI_no_noops": {
+    "dynamic_place_seq_delta_i_no_noops": {
         "image_obs_keys": {"primary": "image", "secondary": None, "wrist": "wrist_image", "delta_primary": "delta_image"},
         "depth_obs_keys": {"primary": None, "secondary": None, "wrist": None},
         "state_obs_keys": ["EEF_state", "gripper_state"],

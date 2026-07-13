@@ -84,7 +84,7 @@ class FinetuneConfig:
     num_images_in_input: int = 1                     # Number of images in the VLA input (default: 1)
     use_proprio: bool = False                        # If True, includes robot proprioceptive state in input
     use_temporal_image: bool = False                 # If True, adds the t-2 primary frame (obs window=3) as an extra image (2-frame / GR00T d2 delta [-2,0])
-    use_delta_image: bool = False                    # If True, adds the materialized ΔI base channel (image_delta_primary, current step) as the extra image INSTEAD of the raw t-2 frame (OFT-ΔI). Needs a *_deltaI_no_noops dataset. Mutually exclusive with use_temporal_image; window_size stays 1 (ΔI is per-step).
+    use_delta_image: bool = False                    # If True, adds the materialized ΔI base channel (image_delta_primary, current step) as the extra image INSTEAD of the raw t-2 frame (OFT-ΔI). Needs a *_delta_i_no_noops dataset. Mutually exclusive with use_temporal_image; window_size stays 1 (ΔI is per-step).
 
     # Training configuration
     batch_size: int = 8                              # Batch size per device (total batch size = batch_size * num GPUs)
