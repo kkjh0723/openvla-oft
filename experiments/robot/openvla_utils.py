@@ -4,6 +4,7 @@ import filecmp
 import json
 import os
 import shutil
+import uuid
 import time
 from datetime import datetime
 from pathlib import Path
@@ -86,9 +87,29 @@ def update_auto_map(pretrained_checkpoint: str) -> None:
         "AutoModelForVision2Seq": "modeling_prismatic.OpenVLAForActionPrediction",
     }
 
-    # Write back the updated config
-    with open(config_path, "w") as f:
-        json.dump(config, f, indent=2)
+    # Write back the updated config ATOMICALLY. open(config_path, "w") truncates in
+    # place and stays 0-byte for the whole dump, so a sibling process sharing this
+    # checkpoint (e.g. two eval cells of the same model launched together) can
+    # json.load() that window and die with "JSONDecodeError: Expecting value: line 1
+    # column 1 (char 0)" — this crashed job 10980. The payload is idempotent
+    # (auto_map is a constant), so a same-dir temp + os.replace (one atomic RPC, incl.
+    # on NFS) makes every concurrent reader see either the old or the new complete
+    # file, never an empty one. uuid4, NOT pid: checkpoints are shared over NFS by 4
+    # nodes and pids are per-node, so two same-pid writers on different nodes would
+    # interleave into one temp and install a CORRUPT config. Mode is copied because
+    # temp+replace installs a new inode; the temp is removed on failure.
+    tmp_path = f"{config_path}.tmp.{uuid.uuid4().hex}"
+    try:
+        with open(tmp_path, "w") as f:
+            json.dump(config, f, indent=2)
+        shutil.copymode(config_path, tmp_path)
+        os.replace(tmp_path, config_path)
+    except BaseException:
+        try:
+            os.unlink(tmp_path)
+        except OSError:
+            pass
+        raise
 
     print(f"Updated config.json at: {os.path.abspath(config_path)}")
     print("Changes made:")
@@ -746,6 +767,14 @@ def get_vla_action(
         all_images = [obs["full_image"]]
         if cfg.num_images_in_input > 1:
             all_images.extend([obs[k] for k in obs.keys() if "wrist" in k])
+
+        # Temporal (past) primary frame, appended LAST so the image order is
+        # [primary_t, wrist_t, primary_{t-2}] — identical to the training collator
+        # order in prismatic/util/data_utils.py (2-frame / GR00T d2 delta [-2,0]).
+        # Only present when the caller supplies it (2-frame eval server); ignored
+        # for the standard single/two-image recipes.
+        if obs.get("temporal_image", None) is not None:
+            all_images.append(obs["temporal_image"])
 
         # Process images
         all_images = prepare_images_for_vla(all_images, cfg)
