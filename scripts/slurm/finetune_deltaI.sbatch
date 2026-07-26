@@ -54,7 +54,7 @@ fi
 DATASET_NAME="${DATASET_NAME:-${SUITE}_delta_i_no_noops}"
 # Distinct run name so the ΔI checkpoints never collide with the 2-frame run.
 RUN_NAME="${RUN_NAME:-openvla-oft-${SUITE}_deltaI}"
-CKPT_ROOT="${CKPT_ROOT:-/mnt/shared/jinhyung/checkpoints/libero-dynamic/OpenVLA-OFT}"
+CKPT_ROOT="${CKPT_ROOT:-/lab-pi/jinhyung/checkpoints/libero-dynamic/OpenVLA-OFT}"
 
 MAX_STEPS="${MAX_STEPS:-150005}"
 SAVE_FREQ="${SAVE_FREQ:-10000}"
