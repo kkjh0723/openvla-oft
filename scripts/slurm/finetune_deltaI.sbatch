@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 #SBATCH --job-name=oft-finetune-deltaI
-#SBATCH --partition=a2
+#SBATCH --partition=pi
+#SBATCH --qos=qos-pi-top
 #SBATCH --nodes=1
 #SBATCH --gpus=16
 #SBATCH --cpus-per-gpu=6
