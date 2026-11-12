@@ -19,6 +19,22 @@ import numpy as np
 import tqdm
 from libero.libero import benchmark
 
+# Register LIBERO-dynamic suites. dynamic_libero exposes DynamicBenchmark but
+# does NOT auto-populate BENCHMARK_MAPPING — insert suite-name → factory entries
+# so benchmark_dict[<suite>]() works for dynamic_{pick,place}_{slow,fast} and
+# dynamic_place_precise (+ their _eval variants).
+try:
+    import dynamic_libero  # noqa: F401
+    from dynamic_libero.benchmark import DynamicBenchmark, DYNAMIC_SUITES
+    from libero.libero import benchmark as _libero_benchmark
+    for _suite_name in DYNAMIC_SUITES:
+        _libero_benchmark.BENCHMARK_MAPPING[_suite_name] = (
+            lambda sn=_suite_name: DynamicBenchmark(sn)
+        )
+    del _suite_name
+except ImportError:
+    pass
+
 import wandb
 
 # Append current directory so that interpreter can find experiments.robot
@@ -57,6 +73,11 @@ class TaskSuite(str, Enum):
     LIBERO_GOAL = "libero_goal"
     LIBERO_10 = "libero_10"
     LIBERO_90 = "libero_90"
+    DYNAMIC_PICK_SLOW_EVAL = "dynamic_pick_slow_eval"
+    DYNAMIC_PICK_FAST_EVAL = "dynamic_pick_fast_eval"
+    DYNAMIC_PLACE_SLOW_EVAL = "dynamic_place_slow_eval"
+    DYNAMIC_PLACE_FAST_EVAL = "dynamic_place_fast_eval"
+    DYNAMIC_PLACE_GENERALIZATION_EVAL = "dynamic_place_generalization_eval"
 
 
 # Define max steps for each task suite
@@ -66,6 +87,11 @@ TASK_MAX_STEPS = {
     TaskSuite.LIBERO_GOAL: 300,  # longest training demo has 270 steps
     TaskSuite.LIBERO_10: 520,  # longest training demo has 505 steps
     TaskSuite.LIBERO_90: 400,  # longest training demo has 373 steps
+    TaskSuite.DYNAMIC_PICK_SLOW_EVAL: 600,
+    TaskSuite.DYNAMIC_PICK_FAST_EVAL: 600,
+    TaskSuite.DYNAMIC_PLACE_SLOW_EVAL: 600,
+    TaskSuite.DYNAMIC_PLACE_FAST_EVAL: 600,
+    TaskSuite.DYNAMIC_PLACE_GENERALIZATION_EVAL: 600,
 }
 
 
@@ -178,8 +204,11 @@ def initialize_model(cfg: GenerateConfig):
 
 def check_unnorm_key(cfg: GenerateConfig, model) -> None:
     """Check that the model contains the action un-normalization key."""
-    # Initialize unnorm_key
+    # Initialize unnorm_key — strip `_eval` for dynamic_libero suites so it can match
+    # the training dataset name (which lacks the `_eval` suffix).
     unnorm_key = cfg.task_suite_name
+    if unnorm_key.endswith("_eval"):
+        unnorm_key = unnorm_key[: -len("_eval")]
 
     # In some cases, the key must be manually modified (e.g. after training on a modified version of the dataset
     # with the suffix "_no_noops" in the dataset name)
